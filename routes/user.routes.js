@@ -1,9 +1,8 @@
 import { Router } from 'express';
+import { digaOi } from '../controllers/user.controller';
 
 const router = Router();
 
-router.get('/', (req, res) => {
-  res.send('Usanto router');
-});
+router.get('/', digaOi);
 
 export default router;
