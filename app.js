@@ -9,6 +9,7 @@ import ManageDB from './db/mongoDb';
 import authRouter from './routes/auth.routes';
 import userRouter from './routes/user.routes';
 import categoryRouter from './routes/category.routes';
+import productRouter from './routes/product.routes';
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use(expressValidator());
 app.use('/api', authRouter);
 app.use('/api', userRouter);
 app.use('/api', categoryRouter);
+app.use('/api', productRouter);
 
 const port = process.env.PORT || 8000;
 
