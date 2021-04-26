@@ -6,7 +6,6 @@ import { errorHandler } from '../helpers/dbErrorHandler';
 
 const signup = (req, res) => {
   const user = new User(req.body);
-  console.log(user);
 
   user.save((err, user) => {
     if (err) {
@@ -67,8 +66,8 @@ const signout = (req, res) => {
 };
 
 const requireSignin = expressJwt({
-  // secret: process.env.JWT_SECRET,
-  secret: 'prmorais1302@gmail.com',
+  secret: process.env.JWT_SECRET,
+  // secret: 'prmorais1302@gmail.com',
   algorithms: ['HS256'], // adicionado depois
   userProperty: 'auth',
 });

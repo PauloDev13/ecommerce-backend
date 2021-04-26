@@ -1,41 +1,34 @@
-import express from "express";
-import expressValidator from "express-validator";
-import mongoose from "mongoose";
-import { config } from "dotenv";
-import cookieParser from "cookie-parser";
-const morgan = require("morgan");
+import express from 'express';
+import expressValidator from 'express-validator';
+// import dotenv from 'dotenv/config.js';
+import cookieParser from 'cookie-parser';
+const morgan = require('morgan');
 
-import authRouter from "./routes/auth.routes";
-import userRouter from "./routes/user.routes";
+import ManageDB from './db/mongoDb';
 
-// Configuração do dotenv
-config();
+import authRouter from './routes/auth.routes';
+import userRouter from './routes/user.routes';
+import categoryRouter from './routes/category.routes';
 
 const app = express();
 
 // Conexão com o bando de dados
-mongoose
-  .connect(process.env.MONGO_URL, {
-    useCreateIndex: true,
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => console.log("BD conectado com sucesso!"))
-  .catch((err) => console.log("Erro ao conectar BD", err));
+ManageDB.connect();
 
 // Middlewares
-app.use(morgan("dev"));
+app.use(morgan('dev'));
 app.use(express.json());
 app.use(cookieParser());
 app.use(expressValidator());
 
 // Middlewares de rotas
-app.use("/api", authRouter);
-app.use("/api", userRouter);
+app.use('/api', authRouter);
+app.use('/api', userRouter);
+app.use('/api', categoryRouter);
 
 const port = process.env.PORT || 8000;
 
 // Inicialização do servidor
 app.listen(port, () =>
-  console.log("Servidor rodando em http://localhost:", port)
+  console.log('Servidor rodando em http://localhost:', port)
 );
