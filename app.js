@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 const morgan = require("morgan");
 
 import authRouter from "./routes/auth.routes";
+import userRouter from "./routes/user.routes";
 
 // Configuração do dotenv
 config();
@@ -30,6 +31,7 @@ app.use(expressValidator());
 
 // Middlewares de rotas
 app.use("/api", authRouter);
+app.use("/api", userRouter);
 
 const port = process.env.PORT || 8000;
 
