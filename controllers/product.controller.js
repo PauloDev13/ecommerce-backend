@@ -24,6 +24,21 @@ const read = (req, res) => {
   res.json(req.product);
 };
 
+const remove = (req, res) => {
+  let product = req.product;
+
+  product.remove((err, deletedProduct) => {
+    if (err) {
+      return res.status(400).json({
+        error: errorHandler(err),
+      });
+    }
+    res.json({
+      message: `${deletedProduct.name} removido com sucesso!`,
+    });
+  });
+};
+
 const create = (req, res) => {
   let form = new formidable.IncomingForm();
   form.keepExtensions = true;
@@ -74,4 +89,4 @@ const create = (req, res) => {
   });
 };
 
-export { create, productById, read };
+export { create, productById, read, remove };
