@@ -39,6 +39,57 @@ const remove = (req, res) => {
   });
 };
 
+const update = (req, res) => {
+  let form = new formidable.IncomingForm();
+  form.keepExtensions = true;
+  form.parse(req, (err, fields, files) => {
+    if (err) {
+      return res.status(400).json({
+        error: 'Erro ao carregar imagem!',
+      });
+    }
+
+    const { name, description, price, category, quantity, shipping } = fields;
+
+    if (
+      !name ||
+      !description ||
+      !price ||
+      !category ||
+      !quantity ||
+      !shipping
+    ) {
+      return res.status(400).json({
+        error: 'Todos os campos devem ser informados',
+      });
+    }
+
+    let product = req.product;
+    product = lodash.extend(product, fields);
+
+    if (files.photo) {
+      if (files.photo.size > 2000000) {
+        return res.status(400).json({
+          error: 'Imagem deve ter até 2 MB de tamanho!',
+        });
+      }
+
+      product.photo.data = fs.readFileSync(files.photo.path);
+      product.photo.contentType = files.photo.type;
+    }
+
+    product.save((err, product) => {
+      if (err || !product) {
+        return res.status(400).json({
+          error: errorHandler(err),
+        });
+      }
+
+      res.json({ product });
+    });
+  });
+};
+
 const create = (req, res) => {
   let form = new formidable.IncomingForm();
   form.keepExtensions = true;
@@ -89,4 +140,4 @@ const create = (req, res) => {
   });
 };
 
-export { create, productById, read, remove };
+export { create, productById, read, remove, update };

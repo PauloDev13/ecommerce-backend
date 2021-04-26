@@ -6,12 +6,20 @@ import {
   productById,
   read,
   remove,
+  update,
 } from '../controllers/product.controller';
 
 const router = Router();
 
 router.get('/product/:productId', read);
 router.post('/product/create/:userId', requireSignin, isAuth, isAdmin, create);
+router.put(
+  '/product/:productId/:userId',
+  requireSignin,
+  isAuth,
+  isAdmin,
+  update
+);
 router.delete(
   '/product/:productId/:userId',
   requireSignin,
