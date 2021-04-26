@@ -1,11 +1,11 @@
-import express from 'express';
-import expressValidator from 'express-validator';
-import mongoose from 'mongoose';
-import { config } from 'dotenv';
-import cookieParser from 'cookie-parser';
-const morgan = require('morgan');
+import express from "express";
+import expressValidator from "express-validator";
+import mongoose from "mongoose";
+import { config } from "dotenv";
+import cookieParser from "cookie-parser";
+const morgan = require("morgan");
 
-import userRouter from './routes/user.routes';
+import authRouter from "./routes/auth.routes";
 
 // Configuração do dotenv
 config();
@@ -19,21 +19,21 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => console.log('BD conectado com sucesso!'))
-  .catch((err) => console.log('Erro ao conectar BD', err));
+  .then(() => console.log("BD conectado com sucesso!"))
+  .catch((err) => console.log("Erro ao conectar BD", err));
 
 // Middlewares
-app.use(morgan('dev'));
+app.use(morgan("dev"));
 app.use(express.json());
 app.use(cookieParser());
 app.use(expressValidator());
 
 // Middlewares de rotas
-app.use('/api', userRouter);
+app.use("/api", authRouter);
 
 const port = process.env.PORT || 8000;
 
 // Inicialização do servidor
 app.listen(port, () =>
-  console.log('Servidor rodando em http://localhost:', port)
+  console.log("Servidor rodando em http://localhost:", port)
 );
