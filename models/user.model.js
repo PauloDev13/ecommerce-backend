@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 import crypto from 'crypto';
-import uuidv1 from 'uuid/dist/v1';
+import { v1 } from 'uuid';
 
 const userSchema = new Schema(
   {
@@ -37,7 +37,7 @@ const userSchema = new Schema(
       default: [],
     },
   },
-  { timestamps }
+  { timestamps: true }
 );
 
 // Virtual Schema
@@ -45,7 +45,7 @@ userSchema
   .virtual('password')
   .set(function (password) {
     this._password = password;
-    this.salt = uuidv1();
+    this.salt = v1();
     this.hashed_password = this.encryptPassword(password);
   })
   .get(function () {
@@ -53,6 +53,10 @@ userSchema
   });
 
 userSchema.methods = {
+  authenticate: function (plainText) {
+    return this.encryptPassword(plainText) === this.hashed_password;
+  },
+
   encryptPassword: function (password) {
     if (!password) return '';
 
@@ -67,4 +71,4 @@ userSchema.methods = {
   },
 };
 
-export default model('User', userSchema);
+export default model('user', userSchema);
