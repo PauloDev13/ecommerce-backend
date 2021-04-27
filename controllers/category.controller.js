@@ -1,6 +1,24 @@
 import { errorHandler } from '../helpers/dbErrorHandler';
 import Category from '../models/category.model';
 
+const categoryById = (req, res, next, id) => {
+  console.log(id);
+  Category.findById(id).exec((err, category) => {
+    if (err) {
+      return res.status(404).json({
+        error: 'Categoria não cadastrada!',
+      });
+    }
+    console.log(req.category);
+    req.category = category;
+    next();
+  });
+};
+
+const read = (req, res) => {
+  res.json(req.category);
+};
+
 const create = (req, res) => {
   const category = new Category(req.body);
 
@@ -15,4 +33,4 @@ const create = (req, res) => {
   });
 };
 
-export { create };
+export { create, categoryById, read };

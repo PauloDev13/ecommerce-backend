@@ -19,7 +19,6 @@ const productById = (req, res, next, id) => {
 };
 
 const read = (req, res) => {
-  console.log(req.product);
   req.product.photo = undefined;
   res.json(req.product);
 };
