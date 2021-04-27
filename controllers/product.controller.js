@@ -1,5 +1,5 @@
 import formidable from 'formidable';
-import lodash from 'lodash';
+import lodash, { toInteger } from 'lodash';
 import fs from 'fs';
 
 import { errorHandler } from '../helpers/dbErrorHandler';
@@ -139,4 +139,32 @@ const create = (req, res) => {
   });
 };
 
-export { create, productById, read, remove, update };
+/* 
+	Venda/Entrega
+	por venda = /products?sortBy=sold&order=desc&limit=4
+	por entrega = /products?sortBy=createdAt&order=desc&limit=4
+	Se não for informado nenhum parâmetro, retorna todos os produtos
+*/
+
+const readAll = (req, res) => {
+  let order = req.query.order ? req.query.order : 'asc';
+  let sortBy = req.query.sortBy ? req.query.sortBy : '_id';
+  let limit = req.query.limit ? parseInt(req.query.limit) : 6;
+
+  Product.find()
+    .select('-photo')
+    .populate('category')
+    .sort([[sortBy, order]])
+    .limit(limit)
+    .exec((err, products) => {
+      if (err || !products) {
+        return res.status(404).json({
+          error: 'Produto não cadastrado!',
+        });
+      }
+
+      res.json(products);
+    });
+};
+
+export { create, productById, read, readAll, remove, update };
