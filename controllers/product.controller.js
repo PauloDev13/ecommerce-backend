@@ -145,7 +145,6 @@ const create = (req, res) => {
 	por entrega = /products?sortBy=createdAt&order=desc&limit=4
 	Se não for informado nenhum parâmetro, retorna todos os produtos
 */
-
 const readAll = (req, res) => {
   let order = req.query.order ? req.query.order : 'asc';
   let sortBy = req.query.sortBy ? req.query.sortBy : '_id';
@@ -159,7 +158,7 @@ const readAll = (req, res) => {
     .exec((err, products) => {
       if (err || !products) {
         return res.status(404).json({
-          error: 'Produto não cadastrado!',
+          error: 'Não há produtos cadastrados para os dados informados!',
         });
       }
 
@@ -167,4 +166,25 @@ const readAll = (req, res) => {
     });
 };
 
-export { create, productById, read, readAll, remove, update };
+/* 
+	Busca os produtos com base na categoria do produto.
+  Outros produtos que possuam a mesma categoria, serão retornados
+*/
+const readRelated = (req, res) => {
+  let limit = req.query.limit ? parseInt(req.query.limit) : 6;
+
+  Product.find({ _id: { $ne: req.product }, category: req.product.category })
+    .limit(limit)
+    .populate('category', '_id name')
+    .exec((err, products) => {
+      if (err || !products) {
+        return res.status(404).json({
+          error: 'Não há produtos cadastrados para os dados informados!',
+        });
+      }
+
+      res.json(products);
+    });
+};
+
+export { create, productById, read, readAll, readRelated, remove, update };
