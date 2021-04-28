@@ -187,4 +187,25 @@ const readRelated = (req, res) => {
     });
 };
 
-export { create, productById, read, readAll, readRelated, remove, update };
+const readProductsByCategory = (req, res) => {
+  Product.distinct('category', {}, (err, categories) => {
+    if (err || !categories) {
+      return res.status(404).json({
+        error: 'Não há categorias cadastradas para os dados informados!',
+      });
+    }
+
+    res.json(categories);
+  });
+};
+
+export {
+  create,
+  productById,
+  read,
+  readAll,
+  readRelated,
+  readProductsByCategory,
+  remove,
+  update,
+};
