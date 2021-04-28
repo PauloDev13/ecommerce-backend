@@ -199,6 +199,58 @@ const readProductsByCategory = (req, res) => {
   });
 };
 
+/**
+ 	Lista produtos através de pesquisa
+ 	Vamos implementar a pesquisa de produtos no frontend react
+ 	Vamos mostrar as categorias na caixa de seleção e a faixa de preço nos botões de opção
+ 	Conforme o usuário clica nessas caixas de seleção e botões de opção, faremos a solicitação 
+ 	a API e mostraremos os produtos aos usuários com base no que ele deseja
+ */
+
+const listBySearch = (req, res) => {
+  let order = req.body.order ? req.body.order : 'desc';
+  let sortBy = req.body.sortBy ? req.body.sortBy : '_id';
+  let limit = req.body.limit ? parseInt(req.body.limit) : 100;
+  let skip = parseInt(req.body.skip);
+  let findArgs = {};
+
+  // console.log(order, sortBy, limit, skip, req.body.filters);
+  // console.log("findArgs", findArgs);
+
+  for (let key in req.body.filters) {
+    if (req.body.filters[key].length > 0) {
+      if (key === 'price') {
+        // gte - preço maior que [0-10]
+        // lte - preço menor que
+        findArgs[key] = {
+          $gte: req.body.filters[key][0],
+          $lte: req.body.filters[key][1],
+        };
+      } else {
+        findArgs[key] = req.body.filters[key];
+      }
+    }
+  }
+
+  Product.find(findArgs)
+    .select('-photo')
+    .populate('category')
+    .sort([[sortBy, order]])
+    .skip(skip)
+    .limit(limit)
+    .exec((err, products) => {
+      if (err) {
+        return res.status(404).json({
+          error: 'Não há produtos cadastrados para os dados informados!',
+        });
+      }
+      res.json({
+        size: products.length,
+        products,
+      });
+    });
+};
+
 export {
   create,
   productById,
@@ -206,6 +258,7 @@ export {
   readAll,
   readRelated,
   readProductsByCategory,
+  listBySearch,
   remove,
   update,
 };
