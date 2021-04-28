@@ -11,6 +11,7 @@ import {
   listBySearch,
   remove,
   update,
+  photo,
 } from '../controllers/product.controller';
 
 const router = Router();
@@ -24,6 +25,8 @@ router.get('/products/categories', readProductsByCategory);
 router.get('/product/:productId', read);
 // Retorna lista de produtos de acordo com os parâmetros informados pelo usuário no frontend
 router.post('/products/by/search', listBySearch);
+// Busca foto do produto pelo productId
+router.get('/product/photo/:productId', photo);
 // Salva um produto
 router.post('/product/create/:userId', requireSignin, isAuth, isAdmin, create);
 // Atualiza um produto

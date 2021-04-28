@@ -251,6 +251,15 @@ const listBySearch = (req, res) => {
     });
 };
 
+const photo = (req, res, next) => {
+  if (req.product.photo.data) {
+    res.set('Content-Type', req.product.photo.contentType);
+    return res.send(req.product.photo.data);
+  }
+
+  next();
+};
+
 export {
   create,
   productById,
@@ -261,4 +270,5 @@ export {
   listBySearch,
   remove,
   update,
+  photo,
 };
