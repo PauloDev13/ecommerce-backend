@@ -11,6 +11,7 @@ import userRouter from './routes/user.routes';
 import categoryRouter from './routes/category.routes';
 import productRouter from './routes/product.routes';
 
+// Ciar app
 const app = express();
 
 // Conexão com o bando de dados

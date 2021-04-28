@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { userById } from '../controllers/user.controller';
+import { userById, read, update } from '../controllers/user.controller';
 import { isAuth, isAdmin, requireSignin } from '../controllers/auth.controller';
 // import { userSignupValidator } from "../validator";
 
@@ -10,6 +10,9 @@ router.get('/secret/:userId', requireSignin, isAuth, isAdmin, (req, res) => {
     user: req.profile,
   });
 });
+
+router.get('/user/:userId', requireSignin, isAuth, read);
+router.put('/user/:userId', requireSignin, isAuth, update);
 
 router.param('userId', userById);
 
