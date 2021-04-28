@@ -3,6 +3,7 @@ import expressValidator from 'express-validator';
 // import dotenv from 'dotenv/config.js';
 import cookieParser from 'cookie-parser';
 const morgan = require('morgan');
+import cors from 'cors';
 
 import ManageDB from './db/mongoDb';
 
@@ -22,6 +23,7 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(cookieParser());
 app.use(expressValidator());
+app.use(cors());
 
 // Middlewares de rotas
 app.use('/api', authRouter);
