@@ -1,9 +1,10 @@
 import formidable from 'formidable';
-import lodash, { toInteger } from 'lodash';
+import lodash from 'lodash';
 import fs from 'fs';
 
 import { errorHandler } from '../helpers/dbErrorHandler';
 import Product from '../models/product.model';
+// import { productValidator } from '../validator/productValidator';
 
 const productById = (req, res, next, id) => {
   Product.findById(id).exec((err, product) => {
@@ -50,16 +51,9 @@ const update = (req, res) => {
 
     const { name, description, price, category, quantity, shipping } = fields;
 
-    if (
-      !name ||
-      !description ||
-      !price ||
-      !category ||
-      !quantity ||
-      !shipping
-    ) {
+    if (!name || !description || !price || !category || !quantity) {
       return res.status(400).json({
-        error: 'Todos os campos devem ser informados',
+        error: 'Informe todos os campos obrigatórios!',
       });
     }
 
@@ -99,27 +93,21 @@ const create = (req, res) => {
       });
     }
 
+    const { name, description, price, category, quantity } = fields;
+    // productValidator(name, description, category, price, quantity, res);
+
+    if (!name || !description || !price || !category || !quantity) {
+      return res.status(400).json({
+        error: 'Informe todos os campos obrigatórios!',
+      });
+    }
+
     let product = new Product(fields);
 
     if (files.photo) {
       if (files.photo.size > 2000000) {
         return res.status(400).json({
           error: 'Imagem deve ter até 2 MB de tamanho!',
-        });
-      }
-
-      const { name, description, price, category, quantity, shipping } = fields;
-
-      if (
-        !name ||
-        !description ||
-        !price ||
-        !category ||
-        !quantity ||
-        !shipping
-      ) {
-        return res.status(400).json({
-          error: 'Todos os campos devem ser informados',
         });
       }
 

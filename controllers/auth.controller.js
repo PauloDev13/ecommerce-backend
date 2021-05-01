@@ -8,9 +8,10 @@ const signup = (req, res) => {
   const user = new User(req.body);
 
   user.save((err, user) => {
-    if (err) {
+    if (err || !user) {
       return res.status(400).json({
         error: errorHandler(err),
+        // error: 'Email is taken',
       });
     }
 
@@ -25,14 +26,22 @@ const signup = (req, res) => {
 
 const signin = (req, res) => {
   const { email, password } = req.body;
+  const emailRecebido = email;
+
+  if (!email || !password) {
+    return res.status(400).json({
+      error: 'Email e Senha devem ser informados!',
+    });
+  }
 
   // busca o usuário pelo email
   User.findOne({ email }, (err, user) => {
     if (err || !user) {
       return res.status(404).json({
-        error: `Usuário não encontrado para o e-mail: ${email}!`,
+        error: `Usuário não cadastrado para o email: ${emailRecebido}`,
       });
     }
+
     /* se o usuário existir, testa email e senha informados
 			 com o método authenticate no model usuário
 		*/

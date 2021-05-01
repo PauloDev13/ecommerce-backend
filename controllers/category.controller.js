@@ -41,7 +41,7 @@ const remove = (req, res) => {
       });
     }
     res.json({
-      message: `${deletedCategory.name} removido com sucesso!`,
+      message: `${deletedCategory.name} removida com sucesso!`,
     });
   });
 };

@@ -10,15 +10,24 @@ import {
   update,
   remove,
 } from '../controllers/category.controller';
+import { categoryValidator } from '../validator';
 
 const router = Router();
 
 router.get('/categories', readAll);
 router.get('/category/:categoryId', read);
-router.post('/category/create/:userId', requireSignin, isAuth, isAdmin, create);
+router.post(
+  '/category/create/:userId',
+  categoryValidator,
+  requireSignin,
+  isAuth,
+  isAdmin,
+  create
+);
 
 router.put(
   '/category/:categoryId/:userId',
+  categoryValidator,
   requireSignin,
   isAuth,
   isAdmin,
